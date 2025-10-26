@@ -479,6 +479,7 @@ impl Technology {
                     UrlRequest::new(main_url, false),
                     UrlRequest::from_path(main_url, "/pageNotFoundNotFound", false),
                     UrlRequest::from_path(main_url, "/phpmyadmin/", false),
+					UrlRequest::from_path(main_url, "/..;/..;/", false),
                 ]
             }
             Self::Tomcat => {

@@ -37,7 +37,7 @@ impl ValueEnum for ScanType {
 }
 
 /// Represents a finding of a technology running on an asset
-#[derive(Serialize)]
+#[derive(Clone, Serialize)]
 pub struct Finding {
     /// The technology found
     pub technology: Technology,

@@ -31,7 +31,7 @@ impl<'a> ApacheHttpdChecker<'a> {
             Regex::new(r"^(?P<wholematch>.*Apache(\/(?P<version1>\d+(\.\d+(\.\d+)?)?))?.*)")
                 .unwrap();
         // Example: <address>Apache/2.4.52 (Debian) OpenSSL/1.1.1 Server at localhost Port 80</address>
-        let body_regex = Regex::new(r"<address>(?P<wholematch>Apache((\/(?P<version1>\d+\.\d+\.\d+)( \([^\)]+\)))?( [a-zA-Z0-9/\.]+)? Server at (<a href=.[a-zA-Z0-9.@:+_-]*.>)?[a-zA-Z0-9-.]+(</a>)? Port \d+)?)</address>").unwrap();
+        let body_regex = Regex::new(r"<address>(?P<wholematch>Apache((\/(?P<version1>\d+\.\d+\.\d+)( \([^\)]+\)))?( [a-zA-Z0-9\/\.]+)? Server at (<a href=.[a-zA-Z0-9.@:+_-]*.>)?[a-zA-Z0-9-.]+(<\/a>)? Port \d+)?)<\/address>").unwrap();
 
         regexes.insert("http-header", (header_regex, 45, 45));
         regexes.insert("http-body", (body_regex, 45, 45));
@@ -119,6 +119,9 @@ impl<'a> HttpChecker for ApacheHttpdChecker<'a> {
     fn check_http(&self, data: &[UrlResponse]) -> Vec<Finding> {
         trace!("Running ApacheHttpdChecker::check_http()");
 
+		let mut header_finding: Option<Finding> = None;
+		let mut body_finding: Option<Finding> = None;
+
         for url_response in data {
             trace!("Checking {}", url_response.url);
             // JavaScript files could be hosted on a different server
@@ -128,17 +131,34 @@ impl<'a> HttpChecker for ApacheHttpdChecker<'a> {
                 continue;
             }
 
+			// If the technology and version are both found, return the finding,
+			// otherwise check the other URLs
+
             // Check in HTTP headers first
-            let header_finding = self.check_http_headers(url_response);
-            if header_finding.is_some() {
+            let header_finding_tmp = self.check_http_headers(url_response);
+			if header_finding_tmp.is_some() {
+				header_finding = header_finding_tmp;
+			}
+            if header_finding.is_some() && header_finding.clone().unwrap().version.is_some() {
                 return vec![header_finding.unwrap()];
             }
             // Check in response body then
-            let body_finding = self.check_http_body(url_response);
-            if body_finding.is_some() {
+            let body_finding_tmp = self.check_http_body(url_response);
+			if body_finding_tmp.is_some() {
+				body_finding = body_finding_tmp;
+			}
+            if body_finding.is_some() && body_finding.clone().unwrap().version.is_some() {
                 return vec![body_finding.unwrap()];
             }
         }
+
+		// If neither the header or the body finding contains the version,
+		// check if at least the technology was identified
+		if header_finding.is_some() {
+			return vec![header_finding.unwrap()];
+		} else if body_finding.is_some() {
+			return vec![body_finding.unwrap()];
+		}
         Vec::new()
     }
 
