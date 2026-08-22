@@ -267,19 +267,22 @@ impl<'a> OSChecker<'a> {
         versions.insert(("ubuntu", "apache", "2.4.57"), "23.10");
         versions.insert(("ubuntu", "apache", "2.4.58"), "24.04");
         versions.insert(("ubuntu", "apache", "2.4.59"), "24.10");
+		versions.insert(("ubuntu", "apache", "2.4.66"), "26.04");
 
         // Ubuntu / Nginx
         versions.insert(("ubuntu", "nginx", "1.14.0"), "18.04");
         versions.insert(("ubuntu", "nginx", "1.18.0"), "20.04|22.04");
         versions.insert(("ubuntu", "nginx", "1.22.0"), "22.10|23.04");
         versions.insert(("ubuntu", "nginx", "1.24.0"), "24.04");
+		versions.insert(("ubuntu", "nginx", "1.28.3"), "26.04");
 
         // Ubuntu / OpenSSH
         versions.insert(("ubuntu", "openssh", "7.6"), "18.04");
         versions.insert(("ubuntu", "openssh", "8.2"), "20.04");
         versions.insert(("ubuntu", "openssh", "8.9"), "22.04");
         versions.insert(("ubuntu", "openssh", "9.0"), "22.10|23.04");
-        versions.insert(("ubuntu", "openssh", "9.4"), "24.04");
+        versions.insert(("ubuntu", "openssh", "9.6"), "24.04");
+		versions.insert(("ubuntu", "openssh", "10.2"), "26.04");
 
         // Debian / Apache httpd
         versions.insert(("debian", "apache", "2.2.22"), "7");
@@ -287,13 +290,13 @@ impl<'a> OSChecker<'a> {
         versions.insert(("debian", "apache", "2.4.38"), "10");
         versions.insert(("debian", "apache", "2.4.54"), "11");
         versions.insert(("debian", "apache", "2.4.57"), "12");
-        versions.insert(("debian", "apache", "2.4.58"), "13");
+        versions.insert(("debian", "apache", "2.4.68"), "13");
 
         // Debian / Nginx
         versions.insert(("debian", "nginx", "1.14.2"), "10");
         versions.insert(("debian", "nginx", "1.18.0"), "11");
         versions.insert(("debian", "nginx", "1.22.1"), "12");
-        versions.insert(("debian", "nginx", "1.24.0"), "13");
+        versions.insert(("debian", "nginx", "1.26.3"), "13");
 
         // Debian / OpenSSH
         versions.insert(("debian", "openssh", "6.7"), "8");
