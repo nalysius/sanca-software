@@ -28,6 +28,22 @@ Options:
   -V, --version                      Print version
 ```
 
+## Building from source
+
+```shell
+git clone https://github.com/nalysius/sanca-software
+cd sanca-software
+cargo build --release
+```
+
+> Note: if on OpenBSD the program fails with a SIGSEGV, it's recommended
+> to compile with
+> cargo build --release --no-default-features --features ring-provider
+> The reason is that OpenBSD has strict rules about memory and aws-lc,
+> the default provider used by rustls, seems to violate them sometimes.
+> The "ring-provider" feature means that the ring provider will be used
+> instead of aws-lc.
+
 ## Examples
 
 ### TCP scan
