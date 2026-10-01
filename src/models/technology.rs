@@ -471,6 +471,7 @@ impl Technology {
                     UrlRequest::from_path(main_url, "info.php", false),
                     UrlRequest::from_path(main_url, "/pageNotFoundNotFound", false),
                     UrlRequest::from_path(main_url, "/phpmyadmin/", false),
+                    UrlRequest::from_path(main_url, "/pma/", false),
                     UrlRequest::from_path(main_url, "_profiler/phpinfo", false),
                 ]
             }
@@ -479,6 +480,7 @@ impl Technology {
                     UrlRequest::new(main_url, false),
                     UrlRequest::from_path(main_url, "/pageNotFoundNotFound", false),
                     UrlRequest::from_path(main_url, "/phpmyadmin/", false),
+                    UrlRequest::from_path(main_url, "/pma/", false),
 					UrlRequest::from_path(main_url, "/..;/..;/", false),
                 ]
             }
@@ -494,6 +496,7 @@ impl Technology {
                     UrlRequest::from_path(main_url, "doc/html/index.html", false),
                     UrlRequest::from_path(main_url, "/phpmyadmin/doc/html/index.html", false),
                     UrlRequest::from_path(main_url, "/mysql/doc/html/index.html", false),
+                    UrlRequest::from_path(main_url, "/pma/doc/html/index.html", false),
                     UrlRequest::from_path(main_url, "ChangeLog", false),
                     UrlRequest::from_path(main_url, "/phpmyadmin/ChangeLog", false),
                     UrlRequest::from_path(main_url, "/phpMyAdmin/ChangeLog", false),
