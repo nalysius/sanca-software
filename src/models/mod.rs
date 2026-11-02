@@ -52,6 +52,8 @@ pub struct Finding {
     pub url_of_finding: Option<String>,
     /// The list of vulnerabilities.
     pub vulnerabilities: Vec<CVE>,
+    /// The date when the version of the technology reached end of life.
+    pub end_of_life: Option<EOLInfo>,
 }
 
 impl Finding {
@@ -70,7 +72,73 @@ impl Finding {
             evidence_text: evidence_text.to_string(),
             url_of_finding: url_of_finding.map(|f| f.to_string()),
             vulnerabilities: Vec::new(),
+            end_of_life: None,
         }
+    }
+
+    /// Extracts the release for endoflife.date from the version.
+    ///
+    /// From a technology version we need to know the supported release,
+    /// e.g. 3.x, 8.2.x and so on. It can be different for each technology,
+    /// jQuery supports the major version, like 3 when version is 3.7.1, but
+    /// PHP supports 8.5 when version is 8.5.2.
+    ///
+    /// # Parameters
+    ///
+    /// nbparts is the number of version parts to include. If version is 3.7.1 and
+    /// nbparts is 1, the function will return 3. If nbparts is 2, the function
+    /// will return 3.7.
+    ///
+    /// # Return
+    ///
+    /// (release, was_long_enough). The first item of the tuple is the release.
+    /// If the version wasn't long enough to extract nbparts, the complete version
+    /// is returned.
+    /// The second item of the tuple is true if the version was long enough to
+    /// extract the release, false otherwise.
+    fn extract_release(&self, nbparts: usize) -> (String, bool) {
+        if self.version.is_none() {
+            return (String::new(), false)
+        }
+        let version = self.version.clone().unwrap();
+        let parts: Vec<&str> = version.split(".").collect();
+        if parts.len() <= nbparts {
+            return (version.to_string(), false);
+        }
+
+        let mut release: String = String::new();
+        let mut counter: usize = 0;
+        for p in parts {
+            if counter == nbparts {
+                break;
+            }
+            if release.len() == 0 {
+                release = format!("{}", p);
+            } else {
+                release = format!("{}.{}", release, p);
+            }
+            counter += 1;
+        }
+
+        (release, true)
+    }
+
+    /// Gets the release of the technology.
+    /// It's used by endoflife.date, it's not the complete version but is used to
+    /// determine if it's supported. For example, jQuery uses major versions like
+    /// 1, 2, 3 or 4, while PHP uses 8.3, 8.4, 8.5.
+    pub fn get_technology_release(&self) -> Option<String> {
+        if self.version.is_none() {
+            return None;
+        }
+        let nbparts = match self.technology {
+            Technology::Bootstrap => 1,
+            Technology::JQuery => 1,
+            Technology::Typo3 => 1,
+            _ => 2, // Most technologies use 2 parts.
+        };
+        let (release, _long_enough) = self.extract_release(nbparts);
+        Some(release)
     }
 }
 
@@ -158,5 +226,21 @@ impl PartialEq for CVE {
     /// Two CVE are equal if they have the same identifier.
     fn eq(&self, other: &Self) -> bool {
         return self.cve_id == other.cve_id;
+    }
+}
+
+/// Represents information about end of life of a technology.
+#[derive(Clone, Deserialize, Serialize)]
+pub struct EOLInfo {
+    /// The date when the technology reached end of life.
+    pub date: String,
+}
+
+impl EOLInfo {
+    /// Creates a new EOLInfo
+    pub fn new(date: &str) -> Self {
+        Self {
+            date: date.to_string(),
+        }
     }
 }

@@ -95,6 +95,9 @@ use crate::readers::tcp::TcpReader;
 use crate::vulnerabilities::cache_managers::{files::FileCacheManager, CacheManager};
 use crate::vulnerabilities::fetchers::{nvd::NVDFetcher, VulnFetcher};
 use crate::vulnerabilities::{CacheType, VulnSource};
+use crate::support::cache_managers::{files::EOLFileCacheManager, EOLCacheManager};
+use crate::support::fetchers::{endoflifedate::EndoflifedateFetcher, EOLFetcher};
+use crate::support::{EOLCacheType, EOLSource};
 use crate::writers::csv::CsvWriter;
 use crate::writers::json::JsonWriter;
 use crate::writers::textstdout::TextStdoutWriter;
@@ -411,6 +414,18 @@ impl Application {
             vuln_fetcher.complete_findings(&mut findings);
         }
 
+        if let Some(eol_source) = &args.eol_source {
+            info!("Completing findings with EOL");
+            let cache_manager: Option<Box<dyn EOLCacheManager>> = match &args.eol_cache {
+                Some(EOLCacheType::Files) => Some(Box::new(EOLFileCacheManager::new())),
+                None => None,
+            };
+            let eol_fetcher = match eol_source {
+                EOLSource::Endoflifedate => EndoflifedateFetcher::new(cache_manager),
+            };
+            eol_fetcher.complete_findings(&mut findings);
+        }
+
         info!("Scan finished, writing output");
         let writer: Box<dyn Writer> = match args.writer {
             Writers::TextStdout => Box::new(TextStdoutWriter::new(args)),
@@ -457,4 +472,12 @@ pub struct Args {
     /// Can be used only if vuln-source is given.
     #[arg(long("vuln-cache"))]
     pub vuln_cache: Option<CacheType>,
+    /// The source where download the EOL information to match the findings against.
+    /// Only the technology name is transmitted.
+    #[arg(long("eol-source"))]
+    pub eol_source: Option<EOLSource>,
+    /// The type of cache to use to store the downloaded EOL information.
+    /// Can be used only if eol-source is given.
+    #[arg(long("eol-cache"))]
+    pub eol_cache: Option<EOLCacheType>,
 }

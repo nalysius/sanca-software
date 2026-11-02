@@ -53,7 +53,7 @@ impl Writer for CsvWriter {
             csv.push_str("\"Main URL\",\"URL of finding\",");
         }
 
-        csv.push_str("\"Evidence\",\"Evidence text\", \"CVEs\"\n");
+        csv.push_str("\"Evidence\",\"Evidence text\", \"CVEs\"n \"EOL\"\n");
         for finding in findings {
             let mut version = "unknown";
             if finding.version.is_some() {
@@ -90,11 +90,18 @@ impl Writer for CsvWriter {
                 cve_ids.push(vuln.cve_id);
             }
 
+            let eol = if finding.end_of_life.is_some() {
+                finding.end_of_life.unwrap().date
+            } else {
+                String::new()
+            };
+
             csv_line.push_str(&format!(
-                "\"{}\",\"{}\",\"{}\"\n",
+                "\"{}\",\"{}\",\"{}\",\"{}\"\n",
                 finding.evidence.replace("\"", "\"\""),
                 finding.evidence_text.replace("\"", "\"\""),
-                cve_ids.join(", ")
+                cve_ids.join(", "),
+                eol
             ));
             csv.push_str(&csv_line);
         }

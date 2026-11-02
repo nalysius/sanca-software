@@ -1,9 +1,10 @@
+//! This module implements a vulnerability fetcher which downloads
+//! the CVEs from the NVD.
+//! https://nvd.nist.gov/developers/vulnerabilities
+
 use crate::models::{Finding, CVE as CVEModel};
 use crate::vulnerabilities::cache_managers::CacheManager;
 use crate::vulnerabilities::fetchers::VulnFetcher;
-/// This module implements a vulnerability fetcher which downloads
-/// the CVEs from the NVD.
-/// https://nvd.nist.gov/developers/vulnerabilities
 use log::{debug, error, trace};
 use serde::Deserialize;
 
@@ -14,7 +15,7 @@ pub struct NVDFetcher {
 }
 
 impl NVDFetcher {
-    /// Fetches the vulnerabilities for a finding
+    /// Fetches the vulnerabilities for a finding.
     pub fn fetch_vulns(&self, finding: &mut Finding) {
         trace!("Running NVDFetcher::fetch_vulns()");
         let (part, vendor, product) = finding.technology.get_cpe_part_vendor_product();
@@ -24,12 +25,12 @@ impl NVDFetcher {
         }
         // Example: https://services.nvd.nist.gov/rest/json/cves/2.0?noRejected&cpeName=cpe:2.3:a:jquery:jquery:1.8.3
         let nvd_url = format!("https://services.nvd.nist.gov/rest/json/cves/2.0?noRejected&cpeName=cpe:2.3:{}:{}:{}:{}", part, vendor, product, finding.version.as_ref().unwrap());
-        let response_opt = reqwest::blocking::get(nvd_url);
-        let response = if let Err(e) = response_opt {
+        let response_res = reqwest::blocking::get(nvd_url);
+        let response = if let Err(e) = response_res {
             error!("Error while communicating with NVD. {:?}", e);
             return;
         } else {
-            response_opt.unwrap()
+            response_res.unwrap()
         };
 
         if !response.status().is_success() {

@@ -1,4 +1,4 @@
-/// The module cache_managers defines the vulnerabilities cache managers.
+//! The module vulnerabilities::cache_managers defines the vulnerabilities cache managers.
 pub mod files;
 
 use crate::models::{technology::Technology, Finding, CVE};

@@ -57,12 +57,19 @@ impl Writer for TextStdoutWriter {
                 String::new()
             };
 
+            let eol_str = if let Some(d) = finding.end_of_life {
+                format!(" | EOL: {}", d.date)
+            } else {
+                String::new()
+            };
+
             println!(
-                "[{}/{}] {}{}\n",
+                "[{}/{}] {}{}{}\n",
                 finding.technology.to_string(),
                 version,
                 finding.evidence_text,
-                cve_str
+                cve_str,
+                eol_str
             );
         }
     }

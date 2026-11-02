@@ -1,4 +1,5 @@
-/// The module fetchers defines the vulnerabilities fetchers.
+//! The module fetchers defines the vulnerabilities fetchers.
+
 pub mod nvd;
 
 use crate::models::Finding;
