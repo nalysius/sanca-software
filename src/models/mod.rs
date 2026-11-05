@@ -4,7 +4,7 @@ pub mod reqres;
 pub mod technology;
 
 use crate::vulnerabilities::fetchers::nvd::Vulnerability;
-use clap::{builder::PossibleValue, ValueEnum};
+use clap::{ValueEnum, builder::PossibleValue};
 use serde::{Deserialize, Serialize};
 use std::convert::From;
 use technology::Technology;
@@ -98,7 +98,7 @@ impl Finding {
     /// extract the release, false otherwise.
     fn extract_release(&self, nbparts: usize) -> (String, bool) {
         if self.version.is_none() {
-            return (String::new(), false)
+            return (String::new(), false);
         }
         let version = self.version.clone().unwrap();
         let parts: Vec<&str> = version.split(".").collect();
@@ -232,15 +232,18 @@ impl PartialEq for CVE {
 /// Represents information about end of life of a technology.
 #[derive(Clone, Deserialize, Serialize)]
 pub struct EOLInfo {
+    /// Whether the technology reached end of life.
+    pub is_eol: bool,
     /// The date when the technology reached end of life.
-    pub date: String,
+    pub eol_from: String,
 }
 
 impl EOLInfo {
     /// Creates a new EOLInfo
-    pub fn new(date: &str) -> Self {
+    pub fn new(is_eol: bool, date: &str) -> Self {
         Self {
-            date: date.to_string(),
+            is_eol: is_eol,
+            eol_from: date.to_string(),
         }
     }
 }

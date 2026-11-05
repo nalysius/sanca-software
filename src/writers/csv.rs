@@ -4,7 +4,7 @@
 use super::Writer;
 use crate::{
     application::Args,
-    models::{reqres::UrlRequest, Finding},
+    models::{Finding, reqres::UrlRequest},
 };
 
 /// A writer to print the findings as CSV.
@@ -90,8 +90,10 @@ impl Writer for CsvWriter {
                 cve_ids.push(vuln.cve_id);
             }
 
-            let eol = if finding.end_of_life.is_some() {
-                finding.end_of_life.unwrap().date
+            let eol = if let Some(e) = finding.end_of_life
+                && e.is_eol
+            {
+                e.eol_from
             } else {
                 String::new()
             };

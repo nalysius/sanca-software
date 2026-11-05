@@ -11,7 +11,7 @@
 pub mod cache_managers;
 pub mod fetchers;
 
-use clap::{builder::PossibleValue, ValueEnum};
+use clap::{ValueEnum, builder::PossibleValue};
 
 /// This enum represents the source of the vulnerabilities.
 #[derive(Clone, Debug)]

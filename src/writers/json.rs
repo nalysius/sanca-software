@@ -4,10 +4,10 @@
 use super::Writer;
 use crate::{
     application::Args,
-    models::{reqres::UrlRequest, Finding},
+    models::{Finding, reqres::UrlRequest},
 };
-use serde_json::value::Value;
 use serde_json::Map;
+use serde_json::value::Value;
 
 /// A writer to print the findings as JSON.
 pub struct JsonWriter {

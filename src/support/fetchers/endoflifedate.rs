@@ -26,7 +26,7 @@ impl EndoflifedateFetcher {
         if finding.version.is_none() {
             return;
         }
-        
+
         let url = format!("https://endoflife.date/api/v1/products/{}", techno_name);
         let response_res = reqwest::blocking::get(url);
         let response = if let Err(e) = response_res {
@@ -57,21 +57,23 @@ impl EndoflifedateFetcher {
 
         for eol_release in eol_response.result.releases {
             if release == eol_release.name {
-                if eol_release.is_eol && eol_release.eol_from.is_some() {
-                    finding.end_of_life = Some(EOLInfo::new(&eol_release.eol_from.unwrap()));
-                    break;
-                }
+                finding.end_of_life = Some(EOLInfo::new(
+                    eol_release.is_eol,
+                    &eol_release.eol_from.unwrap_or(String::new()),
+                ));
+                break;
             }
         }
 
-        if let Some(c) = self.cache.as_ref() && finding.end_of_life.is_some() {
+        if let Some(c) = self.cache.as_ref()
+            && finding.end_of_life.is_some()
+        {
             c.store(
                 finding.end_of_life.clone().unwrap(),
                 finding.technology.clone(),
-                &release
+                &release,
             );
         }
-        
     }
 }
 
@@ -273,4 +275,3 @@ pub struct ReleaseCustom {
     #[serde(rename = "latestJdkVersion")]
     pub latest_jdk_version: Option<String>,
 }
-

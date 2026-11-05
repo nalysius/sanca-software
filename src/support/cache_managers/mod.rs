@@ -1,8 +1,7 @@
 //! The module support::cache_managers defines the cache managers for EOL information.
 pub mod files;
 
-use crate::models::{technology::Technology, Finding, EOLInfo};
-
+use crate::models::{EOLInfo, Finding, technology::Technology};
 
 /// A common interface between all cache managers.
 pub trait EOLCacheManager {

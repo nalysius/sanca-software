@@ -1,9 +1,9 @@
 //! This module contains the FileCacheManager struct.
-use crate::models::{technology::Technology, Finding, EOLInfo};
+use crate::models::{EOLInfo, Finding, technology::Technology};
 use crate::support::cache_managers::EOLCacheManager;
 use log::{error, trace};
 use std::env;
-use std::fs::{create_dir_all, File};
+use std::fs::{File, create_dir_all};
 use std::io::prelude::*;
 use std::path::{Path, PathBuf};
 
@@ -29,11 +29,8 @@ impl EOLCacheManager for EOLFileCacheManager {
             return false;
         }
         let release = release.unwrap();
-        
-        if let Some(eol) = self.read(
-            finding.technology.clone(),
-            &release,
-        ) {
+
+        if let Some(eol) = self.read(finding.technology.clone(), &release) {
             finding.end_of_life = Some(eol);
             return true;
         } else {

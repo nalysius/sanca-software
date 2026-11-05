@@ -57,8 +57,10 @@ impl Writer for TextStdoutWriter {
                 String::new()
             };
 
-            let eol_str = if let Some(d) = finding.end_of_life {
-                format!(" | EOL: {}", d.date)
+            let eol_str = if let Some(e) = finding.end_of_life
+                && e.is_eol
+            {
+                format!(" | EOL: {}", e.eol_from)
             } else {
                 String::new()
             };
