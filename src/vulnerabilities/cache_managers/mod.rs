@@ -1,7 +1,7 @@
 //! The module vulnerabilities::cache_managers defines the vulnerabilities cache managers.
 pub mod files;
 
-use crate::models::{technology::Technology, Finding, CVE};
+use crate::models::{CVE, Finding, technology::Technology};
 
 /// A common interface between all cache managers.
 pub trait CacheManager {

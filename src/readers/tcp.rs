@@ -5,8 +5,8 @@
 use log::{debug, warn};
 use log::{error, trace};
 
-use std::io::prelude::*;
 use std::io::Result as IoResult;
+use std::io::prelude::*;
 use std::net::TcpStream;
 use std::time::Duration;
 

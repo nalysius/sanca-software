@@ -6,7 +6,7 @@ use std::collections::HashMap;
 
 use super::{Checker, HttpChecker, TcpChecker};
 use crate::models::reqres::{UrlRequestType, UrlResponse};
-use crate::models::{technology::Technology, Finding};
+use crate::models::{Finding, technology::Technology};
 use log::{debug, info, trace};
 use regex::Regex;
 
@@ -100,12 +100,8 @@ impl<'a> OSChecker<'a> {
                 }
                 let evidence = &header_value;
                 let evidence_text = format!(
-                        "The operating system {}{} has been identified using the HTTP header \"{}: {}\" returned at the following URL: {}",
-                        os_name,
-                        version_text,
-                        header_name,
-                        evidence,
-                        url_response.url,
+                    "The operating system {}{} has been identified using the HTTP header \"{}: {}\" returned at the following URL: {}",
+                    os_name, version_text, header_name, evidence, url_response.url,
                 );
 
                 let os_technology = if let Some(t) = self.get_technology_os(&os_name) {
@@ -154,12 +150,9 @@ impl<'a> OSChecker<'a> {
             }
 
             let evidence_text = format!(
-                    "The operating system {}{} has been identified by looking at the web server's signature \"{}\" at this page: {}",
-                    os_name,
-                    version_text,
-                    evidence,
-                    url_response.url
-                );
+                "The operating system {}{} has been identified by looking at the web server's signature \"{}\" at this page: {}",
+                os_name, version_text, evidence, url_response.url
+            );
 
             let os_technology = if let Some(t) = self.get_technology_os(&os_name) {
                 t
@@ -199,11 +192,8 @@ impl<'a> OSChecker<'a> {
             }
 
             let evidence_text = format!(
-                    "The operating system {}{} has been identified by looking at the web server's signature \"{}\" at this page: {}",
-                    os_name,
-                    version_text,
-                    evidence,
-                    url_response.url
+                "The operating system {}{} has been identified by looking at the web server's signature \"{}\" at this page: {}",
+                os_name, version_text, evidence, url_response.url
             );
 
             let os_technology = if let Some(t) = self.get_technology_os(&os_name) {
@@ -254,7 +244,10 @@ impl<'a> OSChecker<'a> {
         let software = software_name.to_lowercase();
         let version = software_version.to_lowercase();
 
-        debug!("Trying to guess OS version with the following values: OS name = {}, Software = {}, Software version = {}", os, software, version);
+        debug!(
+            "Trying to guess OS version with the following values: OS name = {}, Software = {}, Software version = {}",
+            os, software, version
+        );
 
         // List the known versions of software
         let mut versions: HashMap<(&str, &str, &str), &str> = HashMap::new();
@@ -267,14 +260,14 @@ impl<'a> OSChecker<'a> {
         versions.insert(("ubuntu", "apache", "2.4.57"), "23.10");
         versions.insert(("ubuntu", "apache", "2.4.58"), "24.04");
         versions.insert(("ubuntu", "apache", "2.4.59"), "24.10");
-		versions.insert(("ubuntu", "apache", "2.4.66"), "26.04");
+        versions.insert(("ubuntu", "apache", "2.4.66"), "26.04");
 
         // Ubuntu / Nginx
         versions.insert(("ubuntu", "nginx", "1.14.0"), "18.04");
         versions.insert(("ubuntu", "nginx", "1.18.0"), "20.04|22.04");
         versions.insert(("ubuntu", "nginx", "1.22.0"), "22.10|23.04");
         versions.insert(("ubuntu", "nginx", "1.24.0"), "24.04");
-		versions.insert(("ubuntu", "nginx", "1.28.3"), "26.04");
+        versions.insert(("ubuntu", "nginx", "1.28.3"), "26.04");
 
         // Ubuntu / OpenSSH
         versions.insert(("ubuntu", "openssh", "7.6"), "18.04");
@@ -282,7 +275,7 @@ impl<'a> OSChecker<'a> {
         versions.insert(("ubuntu", "openssh", "8.9"), "22.04");
         versions.insert(("ubuntu", "openssh", "9.0"), "22.10|23.04");
         versions.insert(("ubuntu", "openssh", "9.6"), "24.04");
-		versions.insert(("ubuntu", "openssh", "10.2"), "26.04");
+        versions.insert(("ubuntu", "openssh", "10.2"), "26.04");
 
         // Debian / Apache httpd
         versions.insert(("debian", "apache", "2.2.22"), "7");
@@ -377,10 +370,8 @@ impl<'a> TcpChecker for OSChecker<'a> {
                 }
 
                 let os_evidence_text = format!(
-                        "The operating system {}{} has been identified using the banner presented by OpenSSH: {}",
-                        os_name,
-                        version_text,
-                        item_clean
+                    "The operating system {}{} has been identified using the banner presented by OpenSSH: {}",
+                    os_name, version_text, item_clean
                 );
 
                 let os_technology = if let Some(t) = self.get_technology_os(&os_name) {
@@ -429,10 +420,8 @@ impl<'a> TcpChecker for OSChecker<'a> {
                 }
 
                 let os_evidence_text = format!(
-                        "The operating system {}{} has been identified using the banner presented by MariaDB: {}",
-                        os_name,
-                        version_text,
-                        item_clean
+                    "The operating system {}{} has been identified using the banner presented by MariaDB: {}",
+                    os_name, version_text, item_clean
                 );
 
                 let os_technology = if let Some(t) = self.get_technology_os(&os_name) {

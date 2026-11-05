@@ -89,19 +89,19 @@ use crate::checkers::wp_plugins::wpforms_lite::WpformsLiteChecker;
 use crate::checkers::wp_plugins::yoast_seo::YoastSEOChecker;
 use crate::checkers::wp_themes::divi::DiviChecker;
 use crate::checkers::{HttpChecker, TcpChecker};
-use crate::models::{reqres::UrlRequest, technology::Technology, Finding, ScanType, Writers};
+use crate::models::{Finding, ScanType, Writers, reqres::UrlRequest, technology::Technology};
 use crate::readers::http::HttpReader;
 use crate::readers::tcp::TcpReader;
-use crate::vulnerabilities::cache_managers::{files::FileCacheManager, CacheManager};
-use crate::vulnerabilities::fetchers::{nvd::NVDFetcher, VulnFetcher};
-use crate::vulnerabilities::{CacheType, VulnSource};
-use crate::support::cache_managers::{files::EOLFileCacheManager, EOLCacheManager};
-use crate::support::fetchers::{endoflifedate::EndoflifedateFetcher, EOLFetcher};
+use crate::support::cache_managers::{EOLCacheManager, files::EOLFileCacheManager};
+use crate::support::fetchers::{EOLFetcher, endoflifedate::EndoflifedateFetcher};
 use crate::support::{EOLCacheType, EOLSource};
+use crate::vulnerabilities::cache_managers::{CacheManager, files::FileCacheManager};
+use crate::vulnerabilities::fetchers::{VulnFetcher, nvd::NVDFetcher};
+use crate::vulnerabilities::{CacheType, VulnSource};
+use crate::writers::Writer;
 use crate::writers::csv::CsvWriter;
 use crate::writers::json::JsonWriter;
 use crate::writers::textstdout::TextStdoutWriter;
-use crate::writers::Writer;
 
 use log::{debug, error, info, trace};
 
@@ -227,7 +227,9 @@ impl Application {
                 args.scan_type, args.ip_hostname, args.port
             );
             println!("Invalid parameters provided. Use sanca --help");
-            panic!("To perform a TCP or UDP scan, the scan type, ip or hostname, and the port are required.");
+            panic!(
+                "To perform a TCP or UDP scan, the scan type, ip or hostname, and the port are required."
+            );
         } else if args.scan_type == ScanType::Http && args.url.is_none() {
             error!("Invalid parameters, scan type is HTTP but no URL has been provided");
             // If a HTTP scan is asked but no URL has been provided
@@ -375,9 +377,7 @@ impl Application {
                 let scan_type = args.scan_type.clone();
                 trace!(
                     "ip_hostname = {}, port = {}, scan_type = {:?}",
-                    ip_hostname,
-                    port,
-                    scan_type
+                    ip_hostname, port, scan_type
                 );
                 self.tcp_udp_scan(
                     &ip_hostname,

@@ -7,9 +7,9 @@
 //! technologies. It's mainly useful in HTTP scan, since it allows to
 //! send less requests.
 
-use super::reqres::UrlRequest;
 use super::ScanType;
-use clap::{builder::PossibleValue, ValueEnum};
+use super::reqres::UrlRequest;
+use clap::{ValueEnum, builder::PossibleValue};
 use serde::Serialize;
 use std::fmt::{Display, Formatter};
 use std::string::ToString;
@@ -481,7 +481,7 @@ impl Technology {
                     UrlRequest::from_path(main_url, "/pageNotFoundNotFound", false),
                     UrlRequest::from_path(main_url, "/phpmyadmin/", false),
                     UrlRequest::from_path(main_url, "/pma/", false),
-					UrlRequest::from_path(main_url, "/..;/..;/", false),
+                    UrlRequest::from_path(main_url, "/..;/..;/", false),
                 ]
             }
             Self::Tomcat => {
@@ -794,20 +794,20 @@ impl Technology {
                         false,
                     ),
                     UrlRequest::from_path(
-			main_url,
-			"wp-content/plugins/LayerSlider/static/layerslider/js/layerslider.kreaturamedia.jquery.js",
-			false,
-		    ),
-		    UrlRequest::from_path(
+                        main_url,
+                        "wp-content/plugins/LayerSlider/static/layerslider/js/layerslider.kreaturamedia.jquery.js",
+                        false,
+                    ),
+                    UrlRequest::from_path(
                         main_url,
                         "/wp-content/plugins/LayerSlider/static/js/layerslider.kreaturamedia.jquery.js",
                         false,
                     ),
                     UrlRequest::from_path(
-			main_url,
-			"wp-content/plugins/LayerSlider/static/js/layerslider.kreaturamedia.jquery.js",
-			false,
-		    ),
+                        main_url,
+                        "wp-content/plugins/LayerSlider/static/js/layerslider.kreaturamedia.jquery.js",
+                        false,
+                    ),
                 ]
             }
             Self::WPPWpMembers => {

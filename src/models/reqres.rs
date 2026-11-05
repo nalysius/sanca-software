@@ -39,7 +39,9 @@ impl UrlRequest {
                     trace!("UrlRequest is not already in the list, add it");
                     url_requests_map.insert(url_request.url, url_request.fetch_js);
                 } else if url_request.fetch_js == true {
-                    trace!("UrlRequest already in the list, but this time fetch_js is true, update the already stored value");
+                    trace!(
+                        "UrlRequest already in the list, but this time fetch_js is true, update the already stored value"
+                    );
                     // If the URL was already in the list but the new one has
                     // fetch_js to true, set fetch_js to true also in the list.
                     // It might be already set to true, but that's not important.
@@ -107,8 +109,7 @@ impl UrlRequest {
         let hostname: String = caps["hostname"].to_string();
         trace!(
             "Handling main_url. Protocol = {}, hostname = {}",
-            protocol,
-            hostname
+            protocol, hostname
         );
         // If the port is not provided, use the default for http / https
         let port: String = if caps.name("port").is_some() {

@@ -57,7 +57,7 @@ pub mod wordpress;
 pub mod wp_plugins;
 pub mod wp_themes;
 
-use crate::models::{reqres::UrlResponse, technology::Technology, Finding};
+use crate::models::{Finding, reqres::UrlResponse, technology::Technology};
 use log::trace;
 use regex::Captures;
 
@@ -238,11 +238,9 @@ fn check_finding_fields(
         evidence
     );
     assert_eq!(
-        finding.technology,
-        technology,
+        finding.technology, technology,
         "Assertion 'finding.technology == technology' failed. Finding's technology: {}, technology: {}",
-        finding.technology,
-        technology
+        finding.technology, technology
     );
     assert!(
         evidence_text.contains(&technology.to_string()),

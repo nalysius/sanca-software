@@ -16,7 +16,7 @@ use rustls::crypto::ring as crypto_provider;
 
 fn main() {
     //simple_logger::init_with_level(log::Level::Debug).unwrap();
-	crypto_provider::default_provider()
+    crypto_provider::default_provider()
         .install_default()
         .expect("Failed to install rustls crypto provider");
     debug!("Starting application");

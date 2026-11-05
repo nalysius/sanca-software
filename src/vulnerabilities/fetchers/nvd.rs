@@ -2,7 +2,7 @@
 //! the CVEs from the NVD.
 //! https://nvd.nist.gov/developers/vulnerabilities
 
-use crate::models::{Finding, CVE as CVEModel};
+use crate::models::{CVE as CVEModel, Finding};
 use crate::vulnerabilities::cache_managers::CacheManager;
 use crate::vulnerabilities::fetchers::VulnFetcher;
 use log::{debug, error, trace};
@@ -24,7 +24,13 @@ impl NVDFetcher {
             return;
         }
         // Example: https://services.nvd.nist.gov/rest/json/cves/2.0?noRejected&cpeName=cpe:2.3:a:jquery:jquery:1.8.3
-        let nvd_url = format!("https://services.nvd.nist.gov/rest/json/cves/2.0?noRejected&cpeName=cpe:2.3:{}:{}:{}:{}", part, vendor, product, finding.version.as_ref().unwrap());
+        let nvd_url = format!(
+            "https://services.nvd.nist.gov/rest/json/cves/2.0?noRejected&cpeName=cpe:2.3:{}:{}:{}:{}",
+            part,
+            vendor,
+            product,
+            finding.version.as_ref().unwrap()
+        );
         let response_res = reqwest::blocking::get(nvd_url);
         let response = if let Err(e) = response_res {
             error!("Error while communicating with NVD. {:?}", e);

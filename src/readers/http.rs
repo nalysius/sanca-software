@@ -70,8 +70,7 @@ impl HttpReader<'_> {
         for url_request in url_requests {
             trace!(
                 "Pushing {} / fetch_js = {} to the list of UrlRequests to fetch",
-                url_request.url,
-                url_request.fetch_js
+                url_request.url, url_request.fetch_js
             );
             url_responses_futures.push(self.read_one_page(url_request, &http_client, user_agent));
         }
@@ -342,12 +341,18 @@ mod tests {
         let url_requests =
             hr.extract_urls("https://www.example.org/index.html", data, None, "scripts");
         assert_eq!(url_requests.len(), 1);
-        assert_eq!(url_requests[0].url, "https://www.example.org/login/javax.faces.resource/jquery/jquery.js.jsf?ln=primefaces&amp;v=8.0");
+        assert_eq!(
+            url_requests[0].url,
+            "https://www.example.org/login/javax.faces.resource/jquery/jquery.js.jsf?ln=primefaces&amp;v=8.0"
+        );
 
         let data = r#"<script type="text/javascript" src="/login/javax.faces.resource/jquery/jquery.js.jsf;jsessionid=pYKnBiK_o8OyDlcQakjdpd2xmR_8mMal_lhg5js8.uldspt02?ln=primefaces&amp;v=8.0"></script>"#;
         let url_requests =
             hr.extract_urls("https://www.example.org/index.html", data, None, "scripts");
         assert_eq!(url_requests.len(), 1);
-        assert_eq!(url_requests[0].url, "https://www.example.org/login/javax.faces.resource/jquery/jquery.js.jsf;jsessionid=pYKnBiK_o8OyDlcQakjdpd2xmR_8mMal_lhg5js8.uldspt02?ln=primefaces&amp;v=8.0");
+        assert_eq!(
+            url_requests[0].url,
+            "https://www.example.org/login/javax.faces.resource/jquery/jquery.js.jsf;jsessionid=pYKnBiK_o8OyDlcQakjdpd2xmR_8mMal_lhg5js8.uldspt02?ln=primefaces&amp;v=8.0"
+        );
     }
 }

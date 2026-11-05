@@ -1,9 +1,9 @@
 /// This module contains the FileCacheManager struct.
-use crate::models::{technology::Technology, Finding, CVE};
+use crate::models::{CVE, Finding, technology::Technology};
 use crate::vulnerabilities::cache_managers::CacheManager;
 use log::{error, trace};
 use std::env;
-use std::fs::{create_dir_all, File};
+use std::fs::{File, create_dir_all};
 use std::io::prelude::*;
 use std::path::{Path, PathBuf};
 
